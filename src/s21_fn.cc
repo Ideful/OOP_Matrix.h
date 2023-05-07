@@ -1,6 +1,6 @@
 #include "s21_matrix_oop.h"
 
-bool S21Matrix::EqMatrix(const S21Matrix& other) {
+bool S21Matrix::EqMatrix(const S21Matrix& other) const {
   bool res = true;
   if (cols_ == other.cols_ && rows_ == other.rows_ && cols_ > 0 && rows_ > 0) {
     for (int i = 0; i < rows_; i++) {
@@ -69,7 +69,7 @@ void S21Matrix::MulMatrix(const S21Matrix& other) {
   }
 }
 
-S21Matrix S21Matrix::Transpose() {
+S21Matrix S21Matrix::Transpose() const {
   S21Matrix tmp(cols_, rows_);
   for (int i = 0; i < rows_; i++) {
     for (int j = 0; j < cols_; j++) {
@@ -79,7 +79,7 @@ S21Matrix S21Matrix::Transpose() {
   return tmp;
 }
 
-S21Matrix S21Matrix::CalcComplements() {
+S21Matrix S21Matrix::CalcComplements() const {
   S21Matrix tmp(rows_, cols_);
   if (rows_ == cols_ && rows_ > 0 && cols_ > 0) {
     for (int i = 0; i < rows_; i++) {
@@ -94,7 +94,7 @@ S21Matrix S21Matrix::CalcComplements() {
   return tmp;
 }
 
-double S21Matrix::Determinant() {
+double S21Matrix::Determinant() const {
   double res = 0;
   if (cols_ == 1)
     res += matrix_[0][0];
@@ -102,7 +102,7 @@ double S21Matrix::Determinant() {
     res += matrix_[0][0] * matrix_[1][1] - matrix_[0][1] * matrix_[1][0];
   else if (cols_ >= 3) {
     for (int i = 0; i < cols_; i++) {
-      S21Matrix minor = this->Minor(i, 0);
+      S21Matrix minor = Minor(i, 0);
       if (i % 2 == 0)
         res += minor.Determinant() * matrix_[0][i];
       else if (i % 2 == 1)
@@ -112,9 +112,10 @@ double S21Matrix::Determinant() {
   return res;
 }
 
-S21Matrix S21Matrix::InverseMatrix() {
+S21Matrix S21Matrix::InverseMatrix() const {
   S21Matrix tmp;
-  if (cols_ == rows_ && Determinant() != 0) {
+  double det = Determinant();
+  if (cols_ == rows_ && det != 0) {
     if (cols_ == 1) {
       tmp.rows_ = 1;
       tmp.cols_ = 1;
@@ -123,7 +124,7 @@ S21Matrix S21Matrix::InverseMatrix() {
       tmp.matrix_[0][0] = 1 / matrix_[0][0];
     } else {
       tmp = CalcComplements().Transpose();
-      tmp.MulNumber(1 / Determinant());
+      tmp.MulNumber(1 / det);
     }
   } else {
     throw std::out_of_range("Incorrect input");
@@ -131,7 +132,7 @@ S21Matrix S21Matrix::InverseMatrix() {
   return tmp;
 }
 
-S21Matrix S21Matrix::Minor(int col_index, int row_index) {
+S21Matrix S21Matrix::Minor(int col_index, int row_index) const {
   S21Matrix tmp(rows_ - 1, cols_ - 1);
   for (int i = 0; i < tmp.rows_; i++) {
     for (int j = 0; j < tmp.cols_; j++) {

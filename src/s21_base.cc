@@ -25,8 +25,13 @@ S21Matrix::S21Matrix(const S21Matrix& other)
   }
 }
 
-S21Matrix::S21Matrix(S21Matrix&& other) : S21Matrix(other) {
-  other.Desctructor();
+S21Matrix::S21Matrix(S21Matrix&& other) {
+  rows_ = other.rows_;
+  cols_ = other.cols_;
+  matrix_ = other.matrix_;
+  other.matrix_ = nullptr;
+  other.cols_ = 0;
+  other.rows_ = 0;
 }
 
 S21Matrix::~S21Matrix() { Desctructor(); }
@@ -66,26 +71,19 @@ void S21Matrix::Cpy(const S21Matrix& other) {
   }
 }
 
-int S21Matrix::GetCols() { return cols_; }
+int S21Matrix::GetCols() const noexcept { return cols_; }
 
-int S21Matrix::GetRows() { return rows_; }
+int S21Matrix::GetRows() const noexcept { return rows_; }
 
 void S21Matrix::SetCols(int cols) {
   if (cols <= 0) {
     throw std::out_of_range("Incorrect input");
   } else {
     S21Matrix tmp(rows_, cols);
-    if (cols > cols_) {
-      for (int i = 0; i < rows_; i++) {
-        for (int j = 0; j < cols_; j++) {
-          tmp.matrix_[i][j] = matrix_[i][j];
-        }
-      }
-    } else if (cols < cols_) {
-      for (int i = 0; i < rows_; i++) {
-        for (int j = 0; j < cols; j++) {
-          tmp.matrix_[i][j] = matrix_[i][j];
-        }
+    double max = cols > cols_? cols_ : cols;
+    for (int i = 0; i < rows_; i++) {
+      for (int j = 0; j < max; j++) {
+        tmp.matrix_[i][j] = matrix_[i][j];
       }
     }
     Cpy(tmp);
@@ -97,17 +95,10 @@ void S21Matrix::SetRows(int rows) {
     throw std::out_of_range("Incorrect input");
   } else {
     S21Matrix tmp(rows, cols_);
-    if (rows > rows_) {
-      for (int i = 0; i < rows_; i++) {
-        for (int j = 0; j < cols_; j++) {
-          tmp.matrix_[i][j] = matrix_[i][j];
-        }
-      }
-    } else if (rows < rows_) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols_; j++) {
-          tmp.matrix_[i][j] = matrix_[i][j];
-        }
+    double max = rows > rows_? rows_ : rows;
+    for (int i = 0; i < max; i++) {
+      for (int j = 0; j < cols_; j++) {
+        tmp.matrix_[i][j] = matrix_[i][j];
       }
     }
     Cpy(tmp);
