@@ -80,7 +80,7 @@ void S21Matrix::SetCols(int cols) {
     throw std::out_of_range("Incorrect input");
   } else {
     S21Matrix tmp(rows_, cols);
-    double max = cols > cols_? cols_ : cols;
+    double max = cols > cols_ ? cols_ : cols;
     for (int i = 0; i < rows_; i++) {
       for (int j = 0; j < max; j++) {
         tmp.matrix_[i][j] = matrix_[i][j];
@@ -95,7 +95,7 @@ void S21Matrix::SetRows(int rows) {
     throw std::out_of_range("Incorrect input");
   } else {
     S21Matrix tmp(rows, cols_);
-    double max = rows > rows_? rows_ : rows;
+    double max = rows > rows_ ? rows_ : rows;
     for (int i = 0; i < max; i++) {
       for (int j = 0; j < cols_; j++) {
         tmp.matrix_[i][j] = matrix_[i][j];

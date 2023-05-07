@@ -71,11 +71,16 @@ void S21Matrix::MulMatrix(const S21Matrix& other) {
 
 S21Matrix S21Matrix::Transpose() const {
   S21Matrix tmp(cols_, rows_);
-  for (int i = 0; i < rows_; i++) {
-    for (int j = 0; j < cols_; j++) {
-      tmp.matrix_[j][i] = matrix_[i][j];
+  if (cols_ > 0 && rows_ > 0) {
+    for (int i = 0; i < rows_; i++) {
+      for (int j = 0; j < cols_; j++) {
+        tmp.matrix_[j][i] = matrix_[i][j];
+      }
     }
+  } else {
+    throw std::out_of_range("Incorrect input");
   }
+
   return tmp;
 }
 
@@ -94,7 +99,7 @@ S21Matrix S21Matrix::CalcComplements() const {
   return tmp;
 }
 
-double S21Matrix::Determinant() const {
+double S21Matrix::Determinant() const noexcept {
   double res = 0;
   if (cols_ == 1)
     res += matrix_[0][0];
@@ -114,25 +119,34 @@ double S21Matrix::Determinant() const {
 
 S21Matrix S21Matrix::InverseMatrix() const {
   S21Matrix tmp;
-  double det = Determinant();
-  if (cols_ == rows_ && det != 0) {
-    if (cols_ == 1) {
-      tmp.rows_ = 1;
-      tmp.cols_ = 1;
-      tmp.matrix_ = new double*[1];
-      tmp.matrix_[0] = new double[1];
-      tmp.matrix_[0][0] = 1 / matrix_[0][0];
+  if (cols_ > 0 && rows_ > 0) {
+    if (cols_ == rows_) {
+      double det = Determinant();
+      if (det != 0) {
+        if (cols_ == 1) {
+          tmp.rows_ = 1;
+          tmp.cols_ = 1;
+          tmp.matrix_ = new double*[1];
+          tmp.matrix_[0] = new double[1];
+          tmp.matrix_[0][0] = 1 / matrix_[0][0];
+        } else {
+          tmp = CalcComplements().Transpose();
+          tmp.MulNumber(1 / det);
+        }
+      } else {
+        throw std::out_of_range("Uncalculatable");
+      }
     } else {
-      tmp = CalcComplements().Transpose();
-      tmp.MulNumber(1 / det);
+      throw std::out_of_range("Incorrect input");
     }
   } else {
     throw std::out_of_range("Incorrect input");
   }
+
   return tmp;
 }
 
-S21Matrix S21Matrix::Minor(int col_index, int row_index) const {
+S21Matrix S21Matrix::Minor(int col_index, int row_index) const noexcept {
   S21Matrix tmp(rows_ - 1, cols_ - 1);
   for (int i = 0; i < tmp.rows_; i++) {
     for (int j = 0; j < tmp.cols_; j++) {

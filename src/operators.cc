@@ -35,21 +35,13 @@ S21Matrix operator*(const S21Matrix& other, double value) {
   return tmp;
 }
 
-void S21Matrix::operator+=(const S21Matrix& other) {
-  SumMatrix(other);
-}
+void S21Matrix::operator+=(const S21Matrix& other) { SumMatrix(other); }
 
-void S21Matrix::operator-=(const S21Matrix& other) {
-  SubMatrix(other);
-}
+void S21Matrix::operator-=(const S21Matrix& other) { SubMatrix(other); }
 
-void S21Matrix::operator*=(const S21Matrix& other) {
-  MulMatrix(other);
-}
+void S21Matrix::operator*=(const S21Matrix& other) { MulMatrix(other); }
 
-void S21Matrix::operator*=(double value) {
-  MulNumber(value);
-}
+void S21Matrix::operator*=(double value) { MulNumber(value); }
 
 double& S21Matrix::operator()(int i, int j) const {
   if (cols_ < 1 || rows_ < 1 || i < 0 || j < 0 || (i > rows_ || j > cols_)) {
@@ -58,7 +50,7 @@ double& S21Matrix::operator()(int i, int j) const {
     return matrix_[i][j];
 }
 
-bool S21Matrix::operator==(const S21Matrix& other) const noexcept{
+bool S21Matrix::operator==(const S21Matrix& other) const noexcept {
   bool res = EqMatrix(other);
   return res;
 }
