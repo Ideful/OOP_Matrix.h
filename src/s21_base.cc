@@ -24,7 +24,10 @@ S21Matrix::S21Matrix(const S21Matrix& other)
     }
   }
 }
-
+  
+  
+  
+// S21Matrix result(std::move(tmp));
 S21Matrix::S21Matrix(S21Matrix&& other) {
   rows_ = other.rows_;
   cols_ = other.cols_;

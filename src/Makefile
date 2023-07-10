@@ -15,7 +15,7 @@ s21_matrix_oop.a: s21_matrix_oop.o
 s21_matrix_oop.o: s21_matrix_oop.h
 	$(gcc) -c *.cc 
 
-gcov_report: clean
+gcov_report: clean, ContainerTest.cpp
 	$(gcc) --coverage *.cc -o gcov_report -lgtest -lstdc++
 	./gcov_report
 	lcov -t "stest" -o unit_test.info -c -d .
